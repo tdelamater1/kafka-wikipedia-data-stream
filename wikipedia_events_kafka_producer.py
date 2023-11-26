@@ -102,7 +102,6 @@ if __name__ == "__main__":
     url = 'https://stream.wikimedia.org/v2/stream/recentchange'
     
     print('Messages are being published to Kafka topic')
-    messages_count = 0
     
     for event in EventSource(url):
         if event.event == 'message':
@@ -117,9 +116,3 @@ if __name__ == "__main__":
                     event_to_send = construct_event(event_data, user_types)
 
                     producer.send('wikipedia-events', value=event_to_send)
-
-                    messages_count += 1
-        
-        if messages_count >= args.events_to_produce:
-            print('Producer will be killed as {} events were producted'.format(args.events_to_produce))
-            exit(0)
